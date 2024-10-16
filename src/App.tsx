@@ -1,10 +1,16 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import { connect } from "react-redux";
 
-function App() {
-  const [count, setCount] = useState(0)
+function App({ count, increment, incrementAmount }) {
+  function handleOnClick() {
+    increment();
+  }
+
+  function handleOnClickAmount() {
+    incrementAmount(5);
+  }
 
   return (
     <>
@@ -18,8 +24,11 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={handleOnClick}>count is {count}</button>
+        <br />
+        <br />
+        <button onClick={handleOnClickAmount}>
+          count with amount is {count}
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
@@ -29,7 +38,21 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+const mapStateToProps = (state) => {
+  return {
+    count: state.counter.value,
+  };
+};
+
+const mapDispatchProps = (dispatch) => {
+  return {
+    increment: () => dispatch({ type: "counter/increment" }),
+    incrementAmount: (amount) =>
+      dispatch({ type: "counter/incrementAmount", payload: amount }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchProps)(App);
